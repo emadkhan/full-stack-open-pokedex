@@ -9,7 +9,9 @@ on:
     - completed
 jobs:
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: |
+      github.event.workflow_run.conclusion == 'success' &&
+        ${{!contains(toJson(github.event.commits.*.message),  '#skip')}}
     runs-on: ubuntu-20.04
     steps:
       - name: Trigger Render deploy

@@ -8,7 +8,9 @@ on:
 
 jobs:
   build:
-    if: github.event.pull_request.merged == true
+    if: |
+      github.event.pull_request.merged == true &&
+        ${{!contains(toJson(github.event.commits.*.message),  '#skip')}}
     runs-on: ubuntu-22.04
     permissions:
       contents: write
