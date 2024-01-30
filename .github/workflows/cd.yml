@@ -9,21 +9,11 @@ on:
     - completed
 jobs:
   deploy:
-    if: |
-      github.event.workflow_run.conclusion == 'success' &&
-        ${{!contains(toJson(github.event.commits.*.message),  '#skip')}}
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Trigger Render deploy
-        run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }} 
-  a_test_job:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
-      - name: commit messages
-        env:
-          COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
-        run: echo "$COMMIT_MESSAGES"
-      - name: if condition 
-        if: ${{!contains(toJson(github.event.commits.*.message),  '#skip')}}
-        run: echo "no skip"
+      - name: Trigger Render deploy
+        if: |
+          github.event.workflow_run.conclusion == 'success' &&
+            ${{!contains(toJson(github.event.commits.*.message),  '#skip')}}
+        run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }} 
