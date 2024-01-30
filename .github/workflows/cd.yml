@@ -17,20 +17,16 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - name: commits
-        env:
-          COMMITS: ${{ toJson(github.event.commits) }}
-        run: echo "$COMMITS"
       - name: commit messages
         env:
-          COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
+          COMMIT_MESSAGES: ${{ toJson(github.event.workflow_run.head_commit.message) }}
         run: echo "$COMMIT_MESSAGES"
       - name: print if skip 
-        if: contains(toJson(github.event.commits.*.message),  '#skip')
+        if: contains(toJson(github.event.workflow_run.head_commit.message),  '#skip')
         run: echo "skip is in message" 
       - name: print if not skip 
-        if: ${{!contains(toJson(github.event.commits.*.message),  '#skip')}}
+        if: ${{!contains(toJson(github.event.workflow_run.head_commit.message),  '#skip')}}
         run: echo "skip is not in message" 
       - name: Trigger Render deploy
-        if: ${{!contains(toJson(github.event.commits.*.message),  '#skip')}}
+        if: ${{!contains(toJson(github.event.workflow_run.head_commit.message),  '#skip')}}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }} 
