@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 const PokemonList = ({ pokemonList }) => {
   return (
     <>
-      <h1>Pokemon updated at {new Date().toString()}</h1>
+      <h1>Pokemon updated {new Date().toString()}</h1>
       <div className="list-container">
         {pokemonList.map(({ id, name }) => (
           <Link
