@@ -1,0 +1,37 @@
+name: Message Discord 
+
+on:
+  workflow_run:
+    workflows:
+      - cd
+      - ci
+    types:
+      - completed
+
+jobs:
+  on-success:
+    if: success() && github.event.workflow == 'cd'
+    name: Successful Deploy 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Message discord on deploy success
+        uses: rjstone/discord-webhook-notify@v1
+        with:
+          severity: info
+          details: Deploy Succeeded by emadkhan
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+  on-failure:
+    if: failure() && github.event.workflow == 'ci'
+    name: Failed Build 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Message discord on build failure 
+        uses: rjstone/discord-webhook-notify@v1
+        with:
+          severity: error
+          details: Deploy Succeeded by emadkhan
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
