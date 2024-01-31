@@ -10,25 +10,6 @@ on:
       - completed
 
 jobs:
-  dump_contexts_to_log:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: Dump GitHub workflow 
-        env:
-          GITHUB_WORKFLOW: ${{ toJson(github.event.workflow) }}
-        run: echo "$GITHUB_WORKFLOW"
-      - name: Dump GitHub workflow run
-        env:
-          GITHUB_RUN: ${{ toJson(github.event.workflow_run) }}
-        run: echo "$GITHUB_RUN"
-      - name: Test direct access
-        run: echo ${{ github.event.workflow_run }}
-      - name: Test direct access with toJson
-        run: echo ${{ toJson(github.event.workflow_run) }}
   on-deploy-success:
     name: Successful Deploy 
     runs-on: ubuntu-latest
@@ -49,7 +30,7 @@ jobs:
       - uses: actions/checkout@master
       - name: Message discord on build failure 
         uses: rjstone/discord-webhook-notify@v1
-        if: github.event.workflow.name == 'ci' && github.event.workflow_run.conclusion == 'failure'
+        if: github.event.workflow_run.name == 'ci' && github.event.workflow_run.conclusion == 'failure'
         with:
           severity: error
           details: Build failed 
@@ -62,7 +43,7 @@ jobs:
       - uses: actions/checkout@master
       - name: Message discord on health check failure 
         uses: rjstone/discord-webhook-notify@v1
-        if: github.event.workflow.name == 'health-check' && github.event.workflow_run.conclusion == 'failure'
+        if: github.event.workflow_run.name == 'health-check' && github.event.workflow_run.conclusion == 'failure'
         with:
           severity: error
           details: Health check failed 
