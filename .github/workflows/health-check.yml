@@ -1,0 +1,18 @@
+name: Health Check
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  ping:
+    name: Ping  
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the deployed service URL
+        uses: jtalk/url-health-check-action@v3
+        with:
+          url: https://pokedex-tb9r.onrender.com
+          follow-redirect: true 
+          max-attempts: 2
+          retry-delay: 5s 
