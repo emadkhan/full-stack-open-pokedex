@@ -1,0 +1,22 @@
+on:
+  workflow_run:
+    workflows:
+    - cd
+    types:
+    - completed
+
+jobs:
+  on-failure:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    name: Failed Build 
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Message discord
+      uses: appleboy/discord-action@master
+      with:
+        webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+        webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+        username: emadkhan
+        color: #e63946
+        args: Build failed by emadkhan 

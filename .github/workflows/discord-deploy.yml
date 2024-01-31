@@ -1,0 +1,24 @@
+name: discord deploy message 
+on:
+  workflow_run:
+    workflows:
+    - cd
+    types:
+    - completed
+jobs:
+
+  on-success:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    name: Successful Deploy 
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Message discord
+      uses: appleboy/discord-action@master
+      with:
+        webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+        webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+        username: emadkhan
+        color: #00f5d4
+        args: A new version of pokedex deployed by emadkhan
+
