@@ -8,17 +8,15 @@ on:
 jobs:
 
   on-success:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: success()
     name: Successful Deploy 
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
     - name: Message discord on deploy success
-      uses: appleboy/discord-action@master
+      uses: rjstone/discord-webhook-notify@v1
       with:
-        webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
-        webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
-        username: emadkhan
-        color: #00f5d4
-        args: A new version of pokedex deployed by emadkhan
+          severity: info
+          details: Deploy Succeeded by emadkhan
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 

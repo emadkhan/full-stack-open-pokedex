@@ -8,16 +8,14 @@ on:
 
 jobs:
   on-failure:
-    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    if: failure()
     name: Failed Build 
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Message discord on build failure
-      uses: appleboy/discord-action@master
+    - name: Message discord on build failure 
+      uses: rjstone/discord-webhook-notify@v1
       with:
-        webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
-        webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
-        username: emadkhan
-        color: #e63946
-        args: Build failed by emadkhan 
+          severity: error
+          details: Deploy Succeeded by emadkhan
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
