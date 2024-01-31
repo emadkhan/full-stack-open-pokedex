@@ -10,28 +10,18 @@ on:
       - completed
 
 jobs:
-  debug:
-    name: Debug 
+  dump_contexts_to_log:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - name: Debug Event
-        run: echo "Event: ${{ toJson(github.event) }}"
-      - name: Debug Workflow Run
-        run: echo "Workflow Run: ${{ toJson(github.event.workflow_run) }}"
-      - name: Debug Workflow 
-        run: echo "Workflow Run: ${{ toJson(github.event.workflow) }}"
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
   on-deploy-success:
     name: Successful Deploy 
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - name: Debug Event
-        run: echo "Event: ${{ toJson(github.event) }}"
-      - name: Debug Workflow Run
-        run: echo "Workflow Run: ${{ toJson(github.event.workflow_run) }}"
-      - name: Debug Workflow 
-        run: echo "Workflow Run: ${{ toJson(github.event.workflow) }}"
       - name: Message discord on deploy success
         uses: rjstone/discord-webhook-notify@v1
         if: github.event.workflow == 'cd' && github.event.workflow_run.conclusion == 'success'
