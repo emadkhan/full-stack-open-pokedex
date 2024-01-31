@@ -15,6 +15,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+      - name: Debug Event
+        run: echo "Event: ${{ toJson(github.event) }}"
+
+      - name: Debug Workflow Run
+        run: echo "Workflow Run: ${{ toJson(github.event.workflow_run) }}"
+      - name: Debug Workflow 
+        run: echo "Workflow Run: ${{ toJson(github.event.workflow) }}"
+
       - name: Message discord on deploy success
         uses: rjstone/discord-webhook-notify@v1
         if: github.event.workflow == 'cd' && github.event.workflow_run.conclusion == 'success'
