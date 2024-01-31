@@ -17,6 +17,18 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
+      - name: Dump GitHub workflow 
+        env:
+          GITHUB_WORKFLOW: ${{ toJson(github.event.workflow) }}
+        run: echo "$GITHUB_WORKFLOW"
+      - name: Dump GitHub workflow run
+        env:
+          GITHUB_RUN: ${{ toJson(github.event.workflow_run) }}
+        run: echo "$GITHUB_RUN"
+      - name: Test direct access
+        run: echo ${{github.event.workflow_run}}
+      - name: Test direct access with toJSon
+        run: echo ${{toJson(github.event.workflow_run)}}
   on-deploy-success:
     name: Successful Deploy 
     runs-on: ubuntu-latest
