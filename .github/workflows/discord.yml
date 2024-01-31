@@ -5,11 +5,12 @@ on:
     workflows:
       - cd
       - ci
+      - health-check
     types:
       - completed
 
 jobs:
-  on-success:
+  on-deploy-success:
     if: success() && github.event.workflow == 'cd'
     name: Successful Deploy 
     runs-on: ubuntu-latest
@@ -19,10 +20,10 @@ jobs:
         uses: rjstone/discord-webhook-notify@v1
         with:
           severity: info
-          details: Deploy Succeeded by emadkhan
+          details: Deploy succeeded
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
-  on-failure:
+  on-build-failure:
     if: failure() && github.event.workflow == 'ci'
     name: Failed Build 
     runs-on: ubuntu-latest
@@ -32,6 +33,19 @@ jobs:
         uses: rjstone/discord-webhook-notify@v1
         with:
           severity: error
-          details: Deploy Succeeded by emadkhan
+          details: Build failed 
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+  
+  on-health-check-failure:
+    if: failure() && github.event.workflow == 'health-check'
+    name: Failed Health Check 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Message discord on build failure 
+        uses: rjstone/discord-webhook-notify@v1
+        with:
+          severity: error
+          details: Health check failed 
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
