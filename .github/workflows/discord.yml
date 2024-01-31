@@ -1,4 +1,4 @@
-name: Message Discord 
+name: message-discord 
 
 on:
   workflow_run:
@@ -11,7 +11,7 @@ on:
 
 jobs:
   on-deploy-success:
-    if: success() && github.event.workflow == 'cd'
+    if: github.event.workflow == 'cd' && github.event.workflow_run.conclusion == 'success'
     name: Successful Deploy 
     runs-on: ubuntu-latest
     steps:
@@ -24,7 +24,7 @@ jobs:
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
   on-build-failure:
-    if: failure() && github.event.workflow == 'ci'
+    if: github.event.workflow == 'ci' && github.event.workflow_run.conclusion == 'failure'
     name: Failed Build 
     runs-on: ubuntu-latest
     steps:
@@ -37,7 +37,7 @@ jobs:
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
   
   on-health-check-failure:
-    if: failure() && github.event.workflow == 'health-check'
+    if: github.event.workflow == 'health-check' && github.event.workflow_run.conclusion == 'failure'
     name: Failed Health Check 
     runs-on: ubuntu-latest
     steps:
