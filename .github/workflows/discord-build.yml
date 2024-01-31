@@ -1,7 +1,8 @@
+name: discord build message 
 on:
   workflow_run:
     workflows:
-    - cd
+    - ci
     types:
     - completed
 
@@ -12,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Message discord
+    - name: Message discord on build failure
       uses: appleboy/discord-action@master
       with:
         webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
