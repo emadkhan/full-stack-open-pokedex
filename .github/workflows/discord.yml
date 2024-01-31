@@ -11,11 +11,11 @@ on:
 
 jobs:
   on-deploy-success:
-    if: github.event.workflow == 'cd' && github.event.workflow_run.conclusion == 'success'
     name: Successful Deploy 
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+      - if: github.event.workflow == 'cd' && github.event.workflow_run.conclusion == 'success'
       - name: Message discord on deploy success
         uses: rjstone/discord-webhook-notify@v1
         with:
@@ -24,11 +24,11 @@ jobs:
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
   on-build-failure:
-    if: github.event.workflow == 'ci' && github.event.workflow_run.conclusion == 'failure'
     name: Failed Build 
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+      - if: github.event.workflow == 'ci' && github.event.workflow_run.conclusion == 'failure'
       - name: Message discord on build failure 
         uses: rjstone/discord-webhook-notify@v1
         with:
@@ -37,11 +37,11 @@ jobs:
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
   
   on-health-check-failure:
-    if: github.event.workflow == 'health-check' && github.event.workflow_run.conclusion == 'failure'
     name: Failed Health Check 
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+      - if: github.event.workflow == 'health-check' && github.event.workflow_run.conclusion == 'failure'
       - name: Message discord on build failure 
         uses: rjstone/discord-webhook-notify@v1
         with:
